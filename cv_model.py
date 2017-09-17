@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss, accuracy_score
 
-def era_split(df, col, test_size=0.1, seed=0):
+def col_split(df, col, test_size=0.1):
     uniques = df[col].unique()
     num_unique = len(df[col].unique())
     test_count = int(num_unique * test_size)
@@ -16,7 +16,6 @@ def era_split(df, col, test_size=0.1, seed=0):
     test_set = df[df[col].isin(test_eras)]
     train_set = df[~df[col].isin(test_eras)]
     return train_set, test_set
-
 
 def get_feat_target(df, feat_col, target_col):
     return df[feat_col], df[target_col]
@@ -46,6 +45,12 @@ def get_cv_params(model_func):
     }
 
     return params.get(model_func, {})
+
+def col_sample(df, col, frac):
+    # Take sample_prob from each era
+    grouped = df.groupby(col)
+    sampled = grouped.apply(lambda x: x.sample(frac=frac))
+    return sampled
 
 def cv_model(model, param_dict, scoring, data_dict, folds=10, n_jobs=4):
     x_train = data_dict['x_train']

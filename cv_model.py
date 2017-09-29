@@ -1,3 +1,4 @@
+import time
 import pdb
 import pandas as pd
 import numpy as np
@@ -28,12 +29,12 @@ def get_cv_params(model_func):
     rf_dict = {
         'min_samples_split': [2, 5],
         'min_samples_leaf': [1, 10, 100],
-        'max_depth': [5, 10, 15],
+        'max_depth': [5, 10],
     }
 
     gbt_dict = {
         'learning_rate': [0.1, 0.25, 0.5],
-        'max_depth': [5, 10, 15],
+        'max_depth': [5],
         'min_samples_split': [2, 5],
         'min_samples_leaf': [1, 10, 100],
     }
@@ -72,17 +73,20 @@ def cv_model(model, param_dict, scoring, data_dict, folds=10, n_jobs=4):
 def run_all_cv(data_dict, folds=5, n_jobs=8):
     model_funcs = [LogisticRegression, RandomForestClassifier, GradientBoostingClassifier]
     for m in model_funcs:
+        start_time = time.time()
         print '=' * 80
         print m.__name__
         model = m()
         cv_params = get_cv_params(m)
         loss, accuracy, best_model, gridcv = cv_model(model, cv_params, 'accuracy',
                                             data_dict, folds=folds, n_jobs=n_jobs)
+        elapsed = time.time() - start_time
         print loss, accuracy
         print '{}'.format(best_model)
         print 'Loss: {}'.format(loss)
         print 'Accuracy: {}'.format(accuracy)
         print gridcv.best_params_
+        print "Time: {:.2f}".format(elapsed)
 
 def main():
     df = pd.read_csv('data/numerai_training_data.csv')

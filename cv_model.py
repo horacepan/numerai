@@ -93,7 +93,7 @@ def main():
     feat_cols = df.columns[3:-1]
     target_col = df.columns[-1]
 
-    train, test = era_split(df, 'era', test_size=0.2)
+    train, test = col_split(df, 'era', test_size=0.2)
     x_train, y_train = get_feat_target(train, feat_cols, target_col)
     x_test, y_test = get_feat_target(test, feat_cols, target_col)
     data_dict = {

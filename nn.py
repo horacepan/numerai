@@ -7,7 +7,6 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
-import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import numpy as np
 from cv_model import col_split, col_sample
